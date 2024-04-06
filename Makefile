@@ -1,7 +1,9 @@
-make_server:
+server:
 	go run main.go
+start-dm:
+	CompileDaemon -command="./go-mongo-tut"
 
 reown:
 	sudo chown -R $(USER) .
 
-.PHONY: make_server reown
+.PHONY: server reown start-dm

@@ -1,1 +1,1 @@
-package gomongotut_test
+package main
