@@ -9,6 +9,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/trankhanh040147/go-mongo-tut/modules/restaurant/model"
+	"github.com/trankhanh040147/go-mongo-tut/modules/restaurant/storage"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -56,7 +57,17 @@ func main() {
 	// }
 	// fmt.Printf("%s\n", jsonData)
 
-	findQuery02(client)
+	// findQuery02(client)
+	restaurantColl := client.Database("sample_restaurants").Collection("restaurants")
+	collStore := storage.NewCollStore(restaurantColl)
+
+	newRestaurant := model.Restaurant{Name: "8283", Cuisine: "Korean"}
+	res, err := collStore.Insert(&newRestaurant)
+
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(res)
 }
 
 // find one

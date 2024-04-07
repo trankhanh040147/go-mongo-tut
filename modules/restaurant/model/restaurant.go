@@ -1,9 +1,7 @@
 package model
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
-
 type Restaurant struct {
-	ID           primitive.ObjectID `bson:"_id"`
+	// ID           primitive.ObjectID `bson:"_id"` // cannot inser when having this fiel
 	Name         string
 	RestaurantId string `bson:"restaurant_id"`
 	Cuisine      string
