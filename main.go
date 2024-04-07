@@ -11,6 +11,7 @@ import (
 	"github.com/trankhanh040147/go-mongo-tut/modules/restaurant/model"
 	"github.com/trankhanh040147/go-mongo-tut/modules/restaurant/storage"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -60,14 +61,13 @@ func main() {
 	// findQuery02(client)
 	restaurantColl := client.Database("sample_restaurants").Collection("restaurants")
 	collStore := storage.NewCollStore(restaurantColl)
+	ctx := context.TODO()
 
-	newRestaurant := model.Restaurant{Name: "8283", Cuisine: "Korean"}
-	res, err := collStore.Insert(&newRestaurant)
+	// *insert a new record
+	// testInsertNewRecord(collStore, ctx)
 
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(res)
+	// *update a record
+	testUpdateRecord(collStore, ctx)
 }
 
 // find one
@@ -122,4 +122,31 @@ func findQuery02(client *mongo.Client) {
 		}
 		fmt.Printf("%s\n", output)
 	}
+}
+
+func testInsertNewRecord(collStore *storage.CollStore, ctx context.Context) {
+	newRestaurant := model.Restaurant{Name: "8283", Cuisine: "Korean"}
+	resultInsert, err := collStore.Insert(ctx, &newRestaurant)
+
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Inserted a new record with ID:", resultInsert.InsertedID)
+
+}
+
+func testUpdateRecord(collStore *storage.CollStore, ctx context.Context) {
+
+	id, _ := primitive.ObjectIDFromHex("5eb3d668b31de5d588f42a7a")
+	filter := bson.D{{"_id", id}}
+
+	// Creates instructions to add the "avg_rating" field to documents
+	update := bson.D{{"$set", bson.D{{"avg_rating", 4.}}}}
+
+	// Updates the document that matches the filter
+	resultUpdate, err := collStore.Update(ctx, &filter, &update)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Updated a record with ID:", id, "Modified count:", resultUpdate.ModifiedCount)
 }

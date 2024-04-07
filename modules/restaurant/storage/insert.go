@@ -7,7 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func (s *CollStore) Insert(data *model.Restaurant) (*mongo.InsertOneResult, error) {
+func (s *CollStore) Insert(ctx context.Context, data *model.Restaurant) (*mongo.InsertOneResult, error) {
 	result, err := s.coll.InsertOne(context.TODO(), data)
 	if err != nil {
 		panic(err)
